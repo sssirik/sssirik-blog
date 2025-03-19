@@ -1,0 +1,26 @@
+services:
+  app: &backend
+    build: .
+    entrypoint: sh ./docker-entrypoint.sh
+    env_file: .env
+    volumes:
+      - rails_logs:/app/log
+      - .:/app:cached
+    depends_on:
+      - db
+
+  web:
+    <<: *backend
+    command: sleep infinity
+    restart: always
+
+  db:
+    image: postgres:16.3
+    restart: always
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    env_file: .env
+
+volumes:
+  pg_data:
+  rails_logs:

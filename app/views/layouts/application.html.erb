@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blog-Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <style>
+      .pagination a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <% if user_signed_in? %>
+      <span>Welcome back, <%= current_user.email %></span>
+
+      <% if current_user.has_role? :admin %>
+        <span>
+          <%= link_to "admin", rails_admin_path, style: "color: #f66; font-weight: bold; text-decoration: none;" %>
+        </span>
+      <% end %>
+
+      <%= link_to "My profile", user_path(current_user) %>
+    <% else %>
+      <%= link_to "Log in", new_user_session_path %> or <%= link_to "Sign up", new_user_registration_path %>
+    <% end %>
+
+    <% unless request.path == "/" %>
+      <br><%= link_to "Go to main page", root_path %>
+    <% end %>
+
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<h4>User: <%= comment.user.email %> | Status: <%= comment.status %></h4>
+
+<p>
+  <strong>Comment:</strong>
+  <%= comment.body %>
+</p>
+
+<% if policy(comment).update? %>
+  <p>
+    <%= link_to "Delete", [comment.article, comment], data: {
+        turbo_method: :delete,
+        turbo_confirm: "Are you sure?"
+    } %>
+  </p>
+<% end %>
+
+<div style="display: flex; align-items: center; gap: 10px;">
+  <%= comment.likes.count %> likes
+
+  <% unless user_signed_in? %>
+    <%= button_to 'Like', new_user_session_path %>
+  <% else %>
+    <% unless current_user.likes.exists?(likeable: comment) %>
+      <%= button_to 'Like', article_comment_likes_path(comment.article, comment), method: :post %>
+    <% else %>
+      <%= button_to 'Unlike', article_comment_like_path(comment.article, comment, current_user.likes.find_by(likeable: comment)), method: :delete %>
+    <% end %>
+  <% end %>
+</div>

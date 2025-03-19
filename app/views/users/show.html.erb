@@ -1,0 +1,47 @@
+<h1>Profile</h1>
+
+<% if current_user == @user %>
+  <%= link_to 'Edit', edit_user_registration_path %>
+  <%= link_to 'Log out', destroy_user_session_path, data: {
+      turbo_method: :delete,
+      turbo_confirm: "Are you sure?"
+  } %>
+<% end %>
+
+<% if @user %>
+  <p><strong>Email:</strong> <%= @user.email %></p>
+
+  <h2>Public Articles</h2>
+  <% if @public_articles.any? %>
+    <ul>
+      <% @public_articles.each do |article| %>
+        <li>
+          <%= link_to article.title, article_path(article) %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No public articles yet.</p>
+  <% end %>
+
+  <% if policy(@user).allow_all_articles? %>
+    <h2>All Articles</h2>
+    <% if @articles.any? %>
+      <ul>
+        <% @articles.each do |article| %>
+          <li>
+            <% unless article.public? %>
+              <i><%= link_to article.title, article_path(article) %></i>
+            <% else %>
+              <%= link_to article.title, article_path(article) %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>No articles yet.</p>
+    <% end%>
+  <% end %>
+<% else %>
+  <p>User not found.</p>
+<% end %>

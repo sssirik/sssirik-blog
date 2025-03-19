@@ -1,0 +1,15 @@
+<h1>Top Active Users</h1>
+
+<% if @users.any? %>
+  <ul style="list-style-type: none">
+    <% @users.each_with_index do |user, index| %>
+      <li>
+        #<%= index + 1 %>:
+        <%= link_to user.email, user_path(user) %>
+        - <%= user.public_articles_count %> articles
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No users found.</p>
+<% end %>

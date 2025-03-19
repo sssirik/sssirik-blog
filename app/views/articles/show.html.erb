@@ -1,0 +1,12 @@
+<%= render @article %>
+
+<h2>Comments</h2>
+<%= render @article.comments %>
+
+<% if policy(Comment).new? %>
+  <h2>Add a comment:</h2>
+
+  <%= render "comments/form", article: @article %>
+<% else %>
+  <h2>Please log in to leave comments</h2>
+<% end %>

@@ -1,0 +1,5 @@
+<%= form_with model: [ article, article.comments.build ] do |form| %>
+  <p><%= form.text_area :body, placeholder: "Comment here..." %></p>
+  <div><%= form.select :status, Visible::VALID_STATUSES, selected: "public" %></div>
+  <p><%= form.submit %></p>
+<% end %>

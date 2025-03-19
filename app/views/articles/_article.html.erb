@@ -1,0 +1,28 @@
+<h1><%= @article.title %></h1>
+<h4>Author: <%= @article.user.email %> | Status: <%= @article.status %></h4>
+
+<p><%= @article.body %></p>
+
+<% if policy(@article).update? %>
+  <p>
+    <%= link_to "Edit", edit_article_path(@article) %>
+    <%= link_to "Delete", article_path(@article), data: {
+        turbo_method: :delete,
+        turbo_confirm: "Are you sure?"
+    } %>
+  </p>
+<% end %>
+
+<div style="display: flex; align-items: center; gap: 10px;">
+  <%= @article.likes.count %> likes
+
+  <% unless user_signed_in? %>
+    <%= button_to 'Like', new_user_session_path %>
+  <% else %>
+    <% unless current_user.likes.exists?(likeable: @article) %>
+      <%= button_to 'Like', article_likes_path(@article), method: :post %>
+    <% else %>
+      <%= button_to 'Unlike', article_like_path(@article, current_user.likes.find_by(likeable: @article)), method: :delete %>
+    <% end %>
+  <% end %>
+</div>
