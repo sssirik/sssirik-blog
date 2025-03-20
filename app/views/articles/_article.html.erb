@@ -5,24 +5,27 @@
 
 <% if policy(@article).update? %>
   <p>
-    <%= link_to "Edit", edit_article_path(@article) %>
-    <%= link_to "Delete", article_path(@article), data: {
-        turbo_method: :delete,
-        turbo_confirm: "Are you sure?"
-    } %>
+    <%= link_to "Edit", edit_article_path(@article), class: "btn secondary small" %>
+    <%= link_to "Delete", article_path(@article), 
+                data: { turbo_method: :delete, turbo_confirm: "Are you sure?" },
+                class: "btn danger small" %>
   </p>
 <% end %>
 
-<div style="display: flex; align-items: center; gap: 10px;">
-  <%= @article.likes.count %> likes
-
+<!-- Новый блок лайков -->
+<div class="icon-wrapper">
+  <%= icon('fas', 'heart', class: 'animated-icon like-icon') %>
+  <span class="like-count"><%= @article.likes.count %></span>
+  
+  <!-- Система лайков -->
   <% unless user_signed_in? %>
-    <%= button_to 'Like', new_user_session_path %>
+    <%= button_to 'Like', new_user_session_path, class: "btn secondary small ml-3" %>
   <% else %>
-    <% unless current_user.likes.exists?(likeable: @article) %>
-      <%= button_to 'Like', article_likes_path(@article), method: :post %>
+    <% if current_user.likes.exists?(likeable: @article) %>
+      <%= button_to 'Unlike', article_like_path(@article, current_user.likes.find_by(likeable: @article)), 
+                  method: :delete, class: "btn danger small ml-3" %>
     <% else %>
-      <%= button_to 'Unlike', article_like_path(@article, current_user.likes.find_by(likeable: @article)), method: :delete %>
+      <%= button_to 'Like', article_likes_path(@article), method: :post, class: "btn primary small ml-3" %>
     <% end %>
   <% end %>
 </div>

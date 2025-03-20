@@ -15,22 +15,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_03_14_202708) do
   enable_extension "plpgsql"
 
   create_table "articles", force: :cascade do |t|
-    t.string "title", null: false
-    t.text "body", null: false
+    t.bigint "user_id", null: false
+    t.string "title"
+    t.text "body"
+    t.string "status", default: "public"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.string "status", default: "public", null: false
     t.index ["user_id"], name: "index_articles_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.text "body", null: false
+    t.text "body"
     t.bigint "article_id", null: false
+    t.string "status", default: "public"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status", default: "public", null: false
     t.index ["article_id"], name: "index_comments_on_article_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
